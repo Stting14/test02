@@ -1,0 +1,45 @@
+python中get请求比post请求更简单（因为post请求还需要关注网页中的data）：
+
+eg：
+
+get请求：(模拟花无缺登陆)
+
+import urllib.request
+---------fiddler抓包登陆地址为http://120.77.65.142:11011/TransfServices/appservice/user/cmp_uinfo.do?key=18813866764&password=stt123----
+----构造url---
+url='http://120.77.65.142:11011/TransfServices/appservice/user/cmp_uinfo.do?'
+user = "18813866764"
+passwd = "stt123"
+
+response = urllib.request.urlopen(url+"key="+user+"&password="+passwd)
+
+html=response.read()
+print(html)
+
+
+post请求：
+以 有道在线翻译为例：
+
+（首先打开有道翻译，输入需要翻译的内容，F12打开开发者调试工具，找到post请求，再在network 一栏中找到‘Request URL=>这就是url地址’）
+import urllib.request
+import urllib.parse
+import json
+content=input('请输入需要翻译的内容：')
+url='http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule&smartresult=ugc&sessionFrom=https://www.baidu.com/link'
+
+data={}
+data['type']='AUTO'
+data['i']=content
+data['doctype']='json'
+data['xmlVersion']='1.8'
+data['keyfrom']='fanyi.web'
+data['ue']='UTF-8'
+data['action']='FY_BY_CLICKBUTTON'
+data['typoResult']='true'
+
+data=urllib.parse.urlencode(data).encode('utf-8')
+response=urllib.request.urlopen(url,data)
+html=response.read().decode('utf-8')
+
+target=json.loads(html)
+print(html)
